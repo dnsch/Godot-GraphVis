@@ -1,0 +1,17 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://MultiMeshInstance2D.gd" type="Script" id=1]
+[ext_resource path="res://icon.png" type="Texture" id=2]
+
+[sub_resource type="MultiMesh" id=1]
+
+[sub_resource type="Gradient" id=2]
+
+[sub_resource type="GradientTexture" id=3]
+gradient = SubResource( 2 )
+
+[node name="MultiMeshInstance2D" type="MultiMeshInstance2D"]
+multimesh = SubResource( 1 )
+texture = ExtResource( 2 )
+normal_map = SubResource( 3 )
+script = ExtResource( 1 )
