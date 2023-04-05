@@ -61,6 +61,9 @@ echo "... libraries (serial)"
 mv -f ./build/libkahip_static.a deploy/libkahip.a
 cp ./build/libkahip* deploy/
 
+#MODIFIED:
+mv deploy/libkahip.so deploy/libmodifiedkahip.so
+
 echo "... headers (serial)"
 cp ./interface/kaHIP_interface.h deploy/
 
@@ -79,6 +82,7 @@ then
     echo "... libraries (parallel)"
     cp ./build/parallel/parallel_src/libparhip_inter*.a deploy/libparhip.a
     mkdir deploy/parallel
+    #MODIFIED:
     cp ./build/parallel/modified_kahip/lib*.a deploy/parallel/libkahip.a
 
     echo "... headers (parallel)"
