@@ -1,0 +1,11 @@
+To see all modifications to the original files 
+go to the files listed below and search for 'MODIFIED:'
+
+lib/definitions.h
+lib/data_structure/graph_access.h
+lib/io/mmap_graph_io.h
+lib/tools/quality_metrics.cpp
+lib/tools/quality_metrics.h
+lib/tools/macros_assertions.h
+
+CMakeLists.txt
