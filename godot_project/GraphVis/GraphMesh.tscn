@@ -1,0 +1,296 @@
+[gd_scene load_steps=18 format=2]
+
+[ext_resource path="res://textures/node.png" type="Texture" id=1]
+[ext_resource path="res://src/graph_mesh.gd" type="Script" id=2]
+[ext_resource path="res://textures/arrow.png" type="Texture" id=3]
+[ext_resource path="res://textures/node_border.png" type="Texture" id=4]
+[ext_resource path="res://textures/arrow_border.png" type="Texture" id=5]
+
+[sub_resource type="Shader" id=21]
+code = "shader_type canvas_item;
+
+uniform vec4 color : hint_color = vec4(1.0);
+uniform float width : hint_range(0, 50) = 1.0;
+uniform int pattern : hint_range(0, 2) = 0; // diamond, circle, square
+uniform bool inside = false;
+uniform bool add_margins = true; // only useful when inside is false
+
+void vertex() {
+	if (add_margins) {
+		VERTEX += (UV * 2.0 - 1.0) * width;
+	}
+}
+
+bool hasContraryNeighbour(vec2 uv, vec2 texture_pixel_size, sampler2D texture) {
+	for (float i = -ceil(width); i <= ceil(width); i++) {
+		float x = abs(i) > width ? width * sign(i) : i;
+		float offset;
+		
+		if (pattern == 0) {
+			offset = width - abs(x);
+		} else if (pattern == 1) {
+			offset = floor(sqrt(pow(width + 0.5, 2) - x * x));
+		} else if (pattern == 2) {
+			offset = width;
+		}
+		
+		for (float j = -ceil(offset); j <= ceil(offset); j++) {
+			float y = abs(j) > offset ? offset * sign(j) : j;
+			vec2 xy = uv + texture_pixel_size * vec2(x, y);
+			
+			if ((xy != clamp(xy, vec2(0.0), vec2(1.0)) || texture(texture, xy).a == 0.0) == inside) {
+				return true;
+			}
+		}
+	}
+	
+	return false;
+}
+
+void fragment() {
+	vec2 uv = UV;
+	
+	if (add_margins) {
+		vec2 texture_pixel_size = vec2(1.0) / (vec2(1.0) / TEXTURE_PIXEL_SIZE + vec2(width * 2.0));
+		
+		uv = (uv - texture_pixel_size * width) * TEXTURE_PIXEL_SIZE / texture_pixel_size;
+		
+		if (uv != clamp(uv, vec2(0.0), vec2(1.0))) {
+			COLOR.a = 0.0;
+		} else {
+			COLOR = texture(TEXTURE, uv);
+		}
+	} else {
+		COLOR = texture(TEXTURE, uv);
+	}
+	
+	if ((COLOR.a > 0.0) == inside && hasContraryNeighbour(uv, TEXTURE_PIXEL_SIZE, TEXTURE)) {
+		COLOR.rgb = inside ? mix(COLOR.rgb, color.rgb, color.a) : color.rgb;
+		COLOR.a += (1.0 - COLOR.a) * color.a;
+	}
+}"
+
+[sub_resource type="ShaderMaterial" id=22]
+shader = SubResource( 21 )
+shader_param/color = Color( 0.333333, 0.337255, 0.364706, 0 )
+shader_param/width = 42.211
+shader_param/pattern = 1
+shader_param/inside = true
+shader_param/add_margins = false
+
+[sub_resource type="MultiMesh" id=2]
+resource_local_to_scene = true
+color_format = 1
+
+[sub_resource type="Shader" id=19]
+code = "shader_type canvas_item;
+
+uniform vec4 color : hint_color = vec4(1.0);
+uniform float width : hint_range(0, 50) = 1.0;
+uniform int pattern : hint_range(0, 2) = 0; // diamond, circle, square
+uniform bool inside = false;
+uniform bool add_margins = true; // only useful when inside is false
+
+void vertex() {
+	if (add_margins) {
+		VERTEX += (UV * 2.0 - 1.0) * width;
+	}
+}
+
+bool hasContraryNeighbour(vec2 uv, vec2 texture_pixel_size, sampler2D texture) {
+	for (float i = -ceil(width); i <= ceil(width); i++) {
+		float x = abs(i) > width ? width * sign(i) : i;
+		float offset;
+		
+		if (pattern == 0) {
+			offset = width - abs(x);
+		} else if (pattern == 1) {
+			offset = floor(sqrt(pow(width + 0.5, 2) - x * x));
+		} else if (pattern == 2) {
+			offset = width;
+		}
+		
+		for (float j = -ceil(offset); j <= ceil(offset); j++) {
+			float y = abs(j) > offset ? offset * sign(j) : j;
+			vec2 xy = uv + texture_pixel_size * vec2(x, y);
+			
+			if ((xy != clamp(xy, vec2(0.0), vec2(1.0)) || texture(texture, xy).a == 0.0) == inside) {
+				return true;
+			}
+		}
+	}
+	
+	return false;
+}
+
+void fragment() {
+	vec2 uv = UV;
+	
+	if (add_margins) {
+		vec2 texture_pixel_size = vec2(1.0) / (vec2(1.0) / TEXTURE_PIXEL_SIZE + vec2(width * 2.0));
+		
+		uv = (uv - texture_pixel_size * width) * TEXTURE_PIXEL_SIZE / texture_pixel_size;
+		
+		if (uv != clamp(uv, vec2(0.0), vec2(1.0))) {
+			COLOR.a = 0.0;
+		} else {
+			COLOR = texture(TEXTURE, uv);
+		}
+	} else {
+		COLOR = texture(TEXTURE, uv);
+	}
+	
+	if ((COLOR.a > 0.0) == inside && hasContraryNeighbour(uv, TEXTURE_PIXEL_SIZE, TEXTURE)) {
+		COLOR.rgb = inside ? mix(COLOR.rgb, color.rgb, color.a) : color.rgb;
+		COLOR.a += (1.0 - COLOR.a) * color.a;
+	}
+}"
+
+[sub_resource type="ShaderMaterial" id=20]
+shader = SubResource( 19 )
+shader_param/color = Color( 1, 0, 0, 1 )
+shader_param/width = 10.0
+shader_param/pattern = 1
+shader_param/inside = true
+shader_param/add_margins = false
+
+[sub_resource type="ArrayMesh" id=3]
+resource_local_to_scene = true
+surfaces/0 = {
+"aabb": AABB( -32, -32, 0, 64, 64, 0 ),
+"array_data": PoolByteArray( 0, 0, 0, 66, 0, 0, 0, 194, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 66, 0, 0, 0, 66, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 194, 0, 0, 0, 66, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 194, 0, 0, 0, 194, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 248, 65, 0, 0, 0, 194, 0, 0, 124, 63, 0, 0, 0, 0 ),
+"array_index_data": PoolByteArray( 4, 0, 0, 0, 1, 0, 1, 0, 2, 0, 3, 0, 3, 0, 4, 0, 1, 0 ),
+"blend_shape_data": [  ],
+"format": 262417,
+"index_count": 9,
+"primitive": 4,
+"skeleton_aabb": [  ],
+"vertex_count": 5
+}
+
+[sub_resource type="MultiMesh" id=15]
+resource_local_to_scene = true
+
+[sub_resource type="ArrayMesh" id=14]
+
+[sub_resource type="MultiMesh" id=16]
+resource_local_to_scene = true
+color_format = 1
+
+[sub_resource type="ArrayMesh" id=17]
+resource_local_to_scene = true
+surfaces/0 = {
+"aabb": AABB( -134.5, -134.5, 0, 269, 269, 0 ),
+"array_data": PoolByteArray( 0, 0, 56, 65, 0, 128, 3, 195, 186, 241, 10, 63, 160, 184, 54, 60, 0, 0, 56, 65, 0, 0, 1, 195, 186, 241, 10, 63, 147, 126, 167, 60, 0, 128, 6, 67, 52, 51, 226, 66, 0, 0, 128, 63, 91, 162, 107, 63, 0, 128, 6, 67, 0, 128, 6, 67, 0, 0, 128, 63, 0, 0, 128, 63, 0, 128, 6, 195, 0, 128, 6, 67, 0, 0, 0, 0, 0, 0, 128, 63, 0, 128, 6, 195, 0, 0, 226, 66, 0, 0, 0, 0, 254, 137, 107, 63, 48, 51, 43, 193, 0, 128, 4, 195, 91, 162, 235, 62, 213, 160, 243, 59, 208, 204, 20, 193, 0, 128, 4, 195, 131, 76, 238, 62, 213, 160, 243, 59, 0, 0, 240, 192, 205, 76, 6, 195, 148, 185, 241, 62, 17, 231, 66, 58, 0, 0, 240, 64, 0, 128, 6, 195, 54, 35, 7, 63, 0, 0, 0, 0 ),
+"array_index_data": PoolByteArray( 9, 0, 0, 0, 1, 0, 1, 0, 2, 0, 3, 0, 3, 0, 4, 0, 5, 0, 5, 0, 6, 0, 7, 0, 7, 0, 8, 0, 9, 0, 9, 0, 1, 0, 3, 0, 3, 0, 5, 0, 7, 0, 7, 0, 9, 0, 3, 0 ),
+"blend_shape_data": [  ],
+"format": 262417,
+"index_count": 24,
+"primitive": 4,
+"skeleton_aabb": [  ],
+"vertex_count": 10
+}
+
+[sub_resource type="MultiMesh" id=18]
+resource_local_to_scene = true
+
+[sub_resource type="ArrayMesh" id=23]
+
+[node name="GraphMesh" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="NodeMultiMesh" type="MultiMeshInstance2D" parent="."]
+visible = false
+material = SubResource( 22 )
+multimesh = SubResource( 2 )
+texture = ExtResource( 1 )
+
+[node name="NodeMultiMesh2" type="MultiMeshInstance2D" parent="."]
+multimesh = SubResource( 2 )
+texture = ExtResource( 1 )
+
+[node name="NodeSprite" type="MeshInstance2D" parent="."]
+visible = false
+material = SubResource( 20 )
+position = Vector2( 194, 112 )
+mesh = SubResource( 3 )
+texture = ExtResource( 1 )
+
+[node name="NodeBorderMultiMesh" type="MultiMeshInstance2D" parent="."]
+visible = false
+self_modulate = Color( 0.180392, 0.180392, 0.180392, 1 )
+multimesh = SubResource( 2 )
+texture = ExtResource( 4 )
+
+[node name="NodeBorderSprite" type="MeshInstance2D" parent="."]
+visible = false
+modulate = Color( 0, 0, 0, 1 )
+self_modulate = Color( 0, 0, 0, 1 )
+position = Vector2( 194, 112 )
+mesh = SubResource( 3 )
+texture = ExtResource( 4 )
+
+[node name="NodeSprite2" type="MeshInstance2D" parent="."]
+visible = false
+position = Vector2( 194, 112 )
+mesh = SubResource( 3 )
+texture = ExtResource( 1 )
+
+[node name="PathMultiMesh" type="MultiMeshInstance2D" parent="."]
+multimesh = SubResource( 15 )
+texture = ExtResource( 4 )
+
+[node name="EdgesMesh" type="MeshInstance2D" parent="."]
+mesh = SubResource( 14 )
+
+[node name="PathMesh" type="MeshInstance2D" parent="."]
+mesh = SubResource( 14 )
+
+[node name="ArrowMultiMesh" type="MultiMeshInstance2D" parent="."]
+z_index = -1
+multimesh = SubResource( 16 )
+texture = ExtResource( 3 )
+
+[node name="ArrowMultiMesh2" type="MultiMeshInstance2D" parent="."]
+z_index = -1
+multimesh = SubResource( 16 )
+texture = ExtResource( 3 )
+
+[node name="ArrowSprite" type="MeshInstance2D" parent="."]
+visible = false
+position = Vector2( -66, 15 )
+mesh = SubResource( 17 )
+texture = ExtResource( 3 )
+
+[node name="ArrowSprite2" type="MeshInstance2D" parent="."]
+visible = false
+position = Vector2( -66, 15 )
+mesh = SubResource( 17 )
+texture = ExtResource( 3 )
+
+[node name="Node" type="Sprite" parent="."]
+visible = false
+self_modulate = Color( 1, 0, 0, 1 )
+position = Vector2( 264, 143 )
+texture = ExtResource( 1 )
+
+[node name="Arrow" type="Sprite" parent="."]
+visible = false
+self_modulate = Color( 0.105882, 0.952941, 0.0784314, 1 )
+position = Vector2( 126, 301 )
+texture = ExtResource( 3 )
+
+[node name="ArrowBorderMultiMesh" type="MultiMeshInstance2D" parent="."]
+multimesh = SubResource( 18 )
+texture = ExtResource( 5 )
+
+[node name="ArrowBorderMultiMesh2" type="MultiMeshInstance2D" parent="."]
+multimesh = SubResource( 18 )
+texture = ExtResource( 5 )
+
+[node name="SelectionMesh" type="MeshInstance2D" parent="."]
+mesh = SubResource( 23 )
+
+[node name="SelectionMultiMesh" type="MultiMeshInstance2D" parent="."]
+multimesh = SubResource( 15 )
+texture = ExtResource( 4 )
