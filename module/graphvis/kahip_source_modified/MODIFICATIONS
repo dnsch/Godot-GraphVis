@@ -9,4 +9,3 @@ lib/tools/quality_metrics.h
 lib/tools/macros_assertions.h
 
 CMakeLists.txt
-compile_withcmake.sh
