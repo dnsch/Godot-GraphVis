@@ -61,9 +61,6 @@ echo "... libraries (serial)"
 mv -f ./build/libkahip_static.a deploy/libkahip.a
 cp ./build/libkahip* deploy/
 
-#MODIFIED:
-mv deploy/libkahip.so deploy/libmodifiedkahip.so
-
 echo "... headers (serial)"
 cp ./interface/kaHIP_interface.h deploy/
 
