@@ -1,0 +1,43 @@
+
+# SCsub
+
+Import('env')
+
+env_graphvis = env.Clone()
+env_graphvis.add_source_files(env.modules_sources, "*.cpp") # Add all cpp files to the build
+
+
+# These paths are relative to /modules/graphvis/
+env_graphvis.Append(CPPPATH=["kahip_source_modified/app", "kahip_source_modified/deploy", "kahip_source_modified/extern/argtable3-3.0.3", "kahip_source_modified/extern/argtable3-3.0.3/tests",
+                             "kahip_source_modified/interface", "kahip_source_modified/lib", "kahip_source_modified/lib/algorithms", "kahip_source_modified/lib/data_structure", "kahip_source_modified/lib/data_structure/matrix", 
+                             "kahip_source_modified/lib/data_structure/priority_queues", "kahip_source_modified/lib/ilp_improve", "kahip_source_modified/lib/io", "kahip_source_modified/lib/mapping",
+                             "kahip_source_modified/lib/node_ordering","kahip_source_modified/lib/parallel_mh", "kahip_source_modified/lib/parallel_mh/exchange", "kahip_source_modified/lib/parallel_mh/galinier_combine",
+                             "kahip_source_modified/lib/partition", "kahip_source_modified/lib/partition/coarsening", 
+                             "kahip_source_modified/lib/partition/coarsening/clustering","kahip_source_modified/lib/partition/coarsening/edge_rating", 
+                             "kahip_source_modified/lib/partition/coarsening/matching","kahip_source_modified/lib/partition/coarsening/matching/gpa", 
+                             "kahip_source_modified/lib/partition/coarsening/stop_rules","kahip_source_modified/lib/partition/initial_partitioning", 
+                             "kahip_source_modified/lib/partition/initial_partitioning/initial_refinement","kahip_source_modified/lib/partition/uncoarsening", 
+                             "kahip_source_modified/lib/partition/uncoarsening/refinement","kahip_source_modified/lib/partition/uncoarsening/refinement/cycle_improvements", 
+                             "kahip_source_modified/lib/partition/uncoarsening/refinement/kway_graph_refinement","kahip_source_modified/lib/partition/uncoarsening/refinement/label_propagation_refinement", 
+                             "kahip_source_modified/lib/partition/uncoarsening/refinement/node_separators","kahip_source_modified/lib/partition/uncoarsening/refinement/quotient_graph_refinement", 
+                             "kahip_source_modified/lib/partition/uncoarsening/refinement/quotient_graph_refinement/2way_fm_refinement", 
+                             "kahip_source_modified/lib/partition/uncoarsening/refinement/quotient_graph_refinement/flow_refinement", 
+                             "kahip_source_modified/lib/partition/uncoarsening/refinement/quotient_graph_refinement/flow_refinement/flow_solving_kernel", 
+                             "kahip_source_modified/lib/partition/uncoarsening/refinement/quotient_graph_refinement/flow_refinement/most_balanced_minimum_cuts", 
+                             "kahip_source_modified/lib/partition/uncoarsening/refinement/quotient_graph_refinement/quotient_graph_scheduling","kahip_source_modified/lib/partition/uncoarsening/refinement/tabu_search", 
+                             "kahip_source_modified/lib/partition/uncoarsening/separator","kahip_source_modified/lib/partition/w_cycles","kahip_source_modified/lib/spac","kahip_source_modified/lib/tools",
+                             "kahip_source_modified/misc"])
+
+# LIBPATH and LIBS need to be set on the real "env" (not the clone)
+# to link the specified libraries to the Godot executable.
+
+# This is a path relative to /modules/graphvis/ where your .a libraries reside.
+# If you are compiling the module externally (not in the godot source tree),
+# these will need to be full paths.
+env.Append(LIBPATH=['kahip_source_modified/deploy'])
+
+# Check with the documentation of the external library to see which library
+# files should be included/linked.
+env.Append(LIBS=['kahip'])
+
+#env.Append(RPATH=["."])
