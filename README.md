@@ -9,7 +9,12 @@ You can download the project by using:
 git clone https://github.com/dnsch/Godot-GraphVis
 ```
 # Installation
-In order to run the main program, unzip the [linux.zip](linux.zip) and compile the [modified KaHIP](module/graphvis/kahip_source_modified/) following the instructions in [INSTALL](module/graphvis/kahip_source_modified/INSTALL) and [README](module/graphvis/kahip_source_modified/README.md). After the compilation you can find a ```libkahip.so``` file in the newly created directory ```kahip_source_modified/deploy/```.  
+In order to run the main program, unzip the [linux.zip](linux.zip) and compile the [modified KaHIP](module/graphvis/kahip_source_modified/) following the instructions in [INSTALL](module/graphvis/kahip_source_modified/INSTALL) and [README](module/graphvis/kahip_source_modified/README.md). You might need to make the ```compile_withcmkae.sh``` executable via:
+```
+chmod +x compile_withcmkae.sh
+```
+assuming you are in the [modified KaHIP](module/graphvis/kahip_source_modified/) directory.  
+After the compilation you can find a ```libkahip.so``` file in the newly created directory ```kahip_source_modified/deploy/```.  
 Copy this file into the unzipped directory ```linux/lib```.  
 After that, you can run the program in the ```linux``` directory via:
 ```
@@ -27,5 +32,5 @@ If you want to use the ```GraphVis``` module in godot, place the [GraphVis](modu
 cp libkahip.a usr/lib
 ```
 assuming you are in the ```kahip_source_modified/deploy/``` directory. 
-This allows you then to call the modified kahip source and additional functions found in [graphis.cpp](module/graphvis/graphvis.cpp) as a class within the Godot editor by using the constructor ```GRAPHVIS.new()```. For further information on using custom modules have a look at [Custom modules in C++](https://docs.godotengine.org/en/3.0/development/cpp/custom_modules_in_cpp.html?highlight=custom%20modules#custom-modules-in-c).  
+This allows you then to call the modified kahip source and additional functions found in [graphis.cpp](module/graphvis/graphvis.cpp) as a class within the Godot editor by using the constructor ```GRAPHVIS.new()```. For further information on using custom modules have a look at [Custom modules in C++](https://docs.godotengine.org/en/3.0/development/cpp/custom_modules_in_cpp.html?highlight=custom%20modules#custom-modules-in-c). You need to edit the [SCsub](Godot-GraphVis/module/graphvis/SCsub) if you want to include more functions from [modified KaHIP](module/graphvis/kahip_source_modified/).  
 Alternatively, you can edit the [existing Godot source code](godot_project/GraphVis/)  for this project.
