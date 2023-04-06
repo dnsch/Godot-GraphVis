@@ -16,7 +16,7 @@ chmod +x compile_withcmake.sh
 assuming you are in the [modified KaHIP](module/graphvis/kahip_source_modified/) directory.  
 After the compilation you can find a ```libkahip.so``` file in the newly created directory ```kahip_source_modified/deploy/```.  
 Copy this file into the unzipped directory ```linux/lib```.  
-After that, you can run the program in the ```linux``` directory via:
+After that, you can run the Godot-GraphVis program in the ```linux``` directory via:
 ```
 ./launcher_script
 ```
