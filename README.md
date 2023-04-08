@@ -1,7 +1,9 @@
 # Godot-GraphVis
-Graph Visualization Tool Made With Godot  
+Graph visualization tool made with godot  
 using [KaHIP](https://github.com/KaHIP/KaHIP) for internal graph structure  
 running on linux
+
+Website: https://pille.iwr.uni-heidelberg.de/~graphvis01/
 
 # Download
 You can download the project by using:
